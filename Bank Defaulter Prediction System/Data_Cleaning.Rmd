@@ -1,0 +1,82 @@
+---
+title: "Data Cleaning"
+author:
+- Ankita Khadsare
+date: "29/09/2020"
+output:
+  word_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r}
+# Import packages
+library(dplyr)  # for using sample function.
+library("imputeTS")
+```
+
+
+```{r}
+original = read.csv("application_data/application_data.csv")
+table(original$TARGET)
+
+
+barplot(table(original$TARGET), main="Target Class Distribution",cex.names=1.0, las = 1, col = "red")
+
+# Select only records with target class 0
+zero = original[original$TARGET == 0, ]
+dim(zero)
+
+# select only records with target class 1
+one = original[original$TARGET == 1, ]
+dim(one)
+
+# Set seed to reproduce results. 
+set.seed(4)
+
+# Generate dataset using balanced classes.
+sample_data = one[sample(nrow(one),24000,replace=FALSE, prob=NULL),]
+sample_data = rbind(sample_data, zero[sample(nrow(one), 24000, replace = FALSE, prob = NULL),])
+dim(sample_data)
+```
+
+
+```{r}
+### -------------------------------------------------------------------------------------------------
+# Select only required attributes
+sample_data <- select(sample_data, TARGET, NAME_CONTRACT_TYPE, CODE_GENDER,
+                                  FLAG_OWN_CAR, FLAG_OWN_REALTY, CNT_CHILDREN, 
+                                  AMT_INCOME_TOTAL, AMT_CREDIT, AMT_ANNUITY, 
+                                  AMT_GOODS_PRICE, NAME_INCOME_TYPE, NAME_EDUCATION_TYPE, 
+                                  NAME_FAMILY_STATUS, NAME_HOUSING_TYPE, DAYS_EMPLOYED, 
+                                  DAYS_ID_PUBLISH, OCCUPATION_TYPE, CNT_FAM_MEMBERS,
+                                  REGION_RATING_CLIENT, REGION_RATING_CLIENT_W_CITY, 
+                                  ORGANIZATION_TYPE, OBS_30_CNT_SOCIAL_CIRCLE, 
+                                  DEF_30_CNT_SOCIAL_CIRCLE, OBS_60_CNT_SOCIAL_CIRCLE,
+                                  DEF_60_CNT_SOCIAL_CIRCLE)
+```
+
+
+
+```{r sample data}
+# Change negative values in the two columns below to absolute value
+sample_data$DAYS_EMPLOYED = abs(sample_data$DAYS_EMPLOYED)
+sample_data$DAYS_ID_PUBLISH = abs(sample_data$DAYS_ID_PUBLISH)
+
+# Replace empty rows in the OCCUPATION_TYPE column with the value "MISSING"
+sample_data$OCCUPATION_TYPE[sample_data$OCCUPATION_TYPE == ""] <- "MISSING"
+```
+
+
+
+```{r}
+# Omit records with na values in it. (Removed ~550) records. 
+sample_data <- na.omit(sample_data)
+dim(sample_data)
+
+# Create a CSV file of a cleaned data.
+write.csv(sample_data, file = "sample_loan_applications_balanced.csv", row.names = FALSE, quote = FALSE)
+```
+

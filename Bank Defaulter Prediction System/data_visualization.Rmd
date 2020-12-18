@@ -1,0 +1,102 @@
+---
+title: "Loan Applications"
+author:
+- Ankita Khadsare
+date: "29/09/2020"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  word_document: default
+  pdf_document: default
+---
+
+Setting the working directory
+```{r}
+setwd("<working directory path>") #set working directory path here
+```
+
+cleaning the environment 
+```{r}
+rm(list = ls())
+```
+
+Reading the processed loan data
+```{r}
+loan_data = read.csv("sample_loan_applications.csv") #entire data set after pre-processing (unbalanced data)
+```
+
+Barplot for few qualitative attributes
+```{r}
+par(mfrow=c(2,2))
+barplot(table(loan_data$NAME_CONTRACT_TYPE), main="NAME_CONTRACT_TYPE",cex.names=1.0, las = 1, col = "red")
+barplot(table(loan_data$CODE_GENDER), main="CODE_GENDER",cex.names=1.0, las = 1, col = "orange")
+barplot(table(loan_data$FLAG_OWN_CAR), main="FLAG_OWN_CAR",cex.names=1.0, las = 1, col = "blue")
+barplot(table(loan_data$FLAG_OWN_REALTY), main="FLAG_OWN_REALTY",cex.names=1.0, las = 1, col = "green")
+
+```
+```{r}
+par(mfrow=c(1,2))
+barplot(table(loan_data$NAME_INCOME_TYPE), main="NAME_INCOME_TYPE",las=2, cex.names=0.7, col=rgb(0.2,0.4,0.6,0.6))
+barplot(table(loan_data$NAME_EDUCATION_TYPE), main="NAME_EDUCATION_TYPE",las=2,cex.names=0.7, col=rgb(0.2,0.4,0.6,0.6))
+barplot(table(loan_data$NAME_FAMILY_STATUS), main="NAME_FAMILY_STATUS",las=2,cex.names=0.7, col=rgb(0.2,0.4,0.6,0.6))
+barplot(table(loan_data$NAME_HOUSING_TYPE), main="NAME_HOUSING_TYPE",las=2,cex.names=0.7, col=rgb(0.2,0.4,0.6,0.6))
+barplot(table(loan_data$OCCUPATION_TYPE), main="OCCUPATION_TYPE",las=2,cex.names=0.7, col=rgb(0.2,0.4,0.6,0.6))
+barplot(table(loan_data$ORGANIZATION_TYPE), main="ORGANIZATION_TYPE",las=2,cex.names=0.7, col=rgb(0.2,0.4,0.6,0.6))
+```
+Boxplot
+```{r}
+options(scipen=999)
+boxplot(loan_data$AMT_CREDIT~loan_data$NAME_CONTRACT_TYPE, main = "AMT_CREDIT vs NAME_CONTRACT_TYPE", ylab = "", xlab = "NAME_CONTRACT_TYPE", ylim= c(1000,3000000))
+```
+
+```{r}
+options(scipen=999)
+#par(srt = 45, cex.axis = 0.7)
+boxplot(loan_data$AMT_INCOME_TOTAL~loan_data$NAME_INCOME_TYPE, main = "AMT_INCOME_TOTAL vs NAME_INCOME_TYPE", ylab = "", xlab = "", ylim= c(1000,400000), par(cex.axis = 0.7))
+```
+
+```{r}
+loan_data$NAME_CONTRACT_TYPE <- as.factor(loan_data$NAME_CONTRACT_TYPE)
+loan_data$CODE_GENDER <- as.factor(loan_data$CODE_GENDER)
+loan_data$FLAG_OWN_CAR <- as.factor(loan_data$FLAG_OWN_CAR)
+loan_data$FLAG_OWN_REALTY <- as.factor(loan_data$FLAG_OWN_REALTY)
+loan_data$NAME_INCOME_TYPE <- as.factor(loan_data$NAME_INCOME_TYPE)
+loan_data$NAME_EDUCATION_TYPE <- as.factor(loan_data$NAME_EDUCATION_TYPE)
+loan_data$NAME_FAMILY_STATUS <- as.factor(loan_data$NAME_FAMILY_STATUS)
+loan_data$NAME_HOUSING_TYPE <- as.factor(loan_data$NAME_HOUSING_TYPE)
+loan_data$OCCUPATION_TYPE <- as.factor(loan_data$OCCUPATION_TYPE)
+loan_data$ORGANIZATION_TYPE <- as.factor(loan_data$ORGANIZATION_TYPE)
+
+```
+
+```{r}
+loan_data$NAME_CONTRACT_TYPE <- as.numeric(loan_data$NAME_CONTRACT_TYPE)
+loan_data$CODE_GENDER <- as.numeric(loan_data$CODE_GENDER)
+loan_data$FLAG_OWN_CAR <- as.numeric(loan_data$FLAG_OWN_CAR)
+loan_data$FLAG_OWN_REALTY <- as.numeric(loan_data$FLAG_OWN_REALTY)
+loan_data$NAME_INCOME_TYPE <- as.numeric(loan_data$NAME_INCOME_TYPE)
+loan_data$NAME_EDUCATION_TYPE <- as.numeric(loan_data$NAME_EDUCATION_TYPE)
+loan_data$NAME_FAMILY_STATUS <- as.numeric(loan_data$NAME_FAMILY_STATUS)
+loan_data$NAME_HOUSING_TYPE <- as.numeric(loan_data$NAME_HOUSING_TYPE)
+loan_data$OCCUPATION_TYPE <- as.numeric(loan_data$OCCUPATION_TYPE)
+loan_data$ORGANIZATION_TYPE <- as.numeric(loan_data$ORGANIZATION_TYPE)
+```
+
+Correlation matrix
+```{r}
+loan_data <- na.omit(loan_data)
+corr_matrix <-cor(loan_data)
+round(corr_matrix, 2)
+library(corrplot)
+corrplot(corr_matrix, method = "square", tl.col = "Black", tl.cex=0.6, order= "hclust")
+```
+```{r}
+#par(mfrow=c(2,2))
+summary(loan_data$AMT_CREDIT)
+hist(loan_data$AMT_CREDIT, breaks=100, main="Credit amount of the loan", xlab="Amount", las=1, col='#3530BC')
+summary(loan_data$AMT_ANNUITY)
+hist(loan_data$AMT_ANNUITY, breaks=100, main="Loan annuity", xlab="Amount", las=1, col='#33FFFF')
+summary(loan_data$AMT_GOODS_PRICE)
+hist(loan_data$AMT_GOODS_PRICE, breaks=100, main="Price of goods for which loan is sanctioned", xlab="Amount", las=1, col='#FFFF00')
+```
