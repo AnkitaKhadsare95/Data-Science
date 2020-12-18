@@ -143,7 +143,6 @@ It doesn’t perform well when the data set is large because the required traini
 While implementing the decision tree model, we have decided to make use of randomly picked 70% of the data for training the model and kept remaining 30% data for testing purposes. We have made use of gini for the impurity measure of the decision tree. Below are the results obtained from the decision tree model.
  
 **Training Confusion Matrix**
-
 | | Predicted 0  | Predicted 1 |
 |-------------| ------------- | ------------- |
 | **Actual 0** | 64307  | 0  |
@@ -152,7 +151,6 @@ While implementing the decision tree model, we have decided to make use of rando
 Accuracy: 100%
 
 **Testing Confusion Matrix**
-
 | | Predicted 0  | Predicted 1 |
 |-------------| ------------- | ------------- |
 | **Actual 0** | 24964  | 2550  |
