@@ -1,4 +1,4 @@
-# Counterfiet Banknote Detection Using Decision Tree
+# Counterfiet Banknote Detection Using Decision Tree (Self Implemented)
 
 It is a system for classifying genuine and forged banknote-like specimens from banknote dataset by implementing a decision tree using Python. This system showed more than 90% accuracy during cross-validation. 
 
